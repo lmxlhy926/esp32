@@ -4,12 +4,16 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+
+/**
+ * 检测到按键按下，则翻转LED状态
+ */
 void key_test()
 {
     led_init();
     key_init();
     while(true){
-        int boot_pin_input_value = key_scan(SCAN_ONE_SHOT);
+        int boot_pin_input_value = key_scan(SCAN_CONTINUE);
         switch(boot_pin_input_value){
             case BOOT_PIN_PRESS:
                 LED_TOGGLE();

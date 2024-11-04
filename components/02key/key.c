@@ -34,20 +34,26 @@ void key_init()
  */
 uint8_t key_scan(scan_mode_t mode)
 {
+    static bool key_press_state_allow_report = true;
     int boot_pin_scan_value = BOOT_PIN_RELEASE;
-    static bool key_press_state_has_report = false;
-
+    
     if(mode == SCAN_CONTINUE){
-        key_press_state_has_report = false;
+        key_press_state_allow_report = true;
     }
     
-    if(BOOT_PIN_STATE() == BOOT_PIN_PRESS && !key_press_state_has_report){  // 按键按下且状态未上报
+    if(BOOT_PIN_STATE() == BOOT_PIN_PRESS && key_press_state_allow_report){  // 按键按下且状态未上报
         vTaskDelay(pdMS_TO_TICKS(10));
-        if(BOOT_PIN_STATE() == BOOT_PIN_PRESS && !key_press_state_has_report){
+        if(BOOT_PIN_STATE() == BOOT_PIN_PRESS && key_press_state_allow_report){
             boot_pin_scan_value = BOOT_PIN_PRESS;
-            key_press_state_has_report = true;
+            key_press_state_allow_report = false;
         }
-    }
 
+    }else if(BOOT_PIN_STATE() == BOOT_PIN_RELEASE){ // 按键松开，
+        vTaskDelay(pdMS_TO_TICKS(10));
+        if(BOOT_PIN_STATE() == BOOT_PIN_RELEASE){
+            key_press_state_allow_report = true;
+        }
+    }   
+    
     return boot_pin_scan_value;
 }

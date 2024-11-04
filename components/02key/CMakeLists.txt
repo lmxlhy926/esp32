@@ -1,7 +1,6 @@
-set(src led.c 
-        test/led_test.c)
+set(src key.c test/key_test.c)
 
-set(requires driver)
+set(requires driver 01led)
 
 idf_component_register(SRCS ${src}
                     INCLUDE_DIRS "."

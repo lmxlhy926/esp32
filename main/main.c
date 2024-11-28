@@ -7,5 +7,5 @@
 
 void app_main(void)
 {
-    exit_test();
+   printf("hello world\n");
 }
